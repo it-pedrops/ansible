@@ -1,0 +1,7 @@
+image: ami-bb9bd7d7
+type: t2.large
+key: my.pem
+subnet: my-subnet
+region: sa-east-1
+nsg: my-nsg
+instance_name: my-instance
