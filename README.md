@@ -1,7 +1,7 @@
 # ansible
 # devops
 ## Criando automação de criação do ambiente de network na AWS.
-![it-pedrops](/ansible/master/aws/infrastructure/vpc-itlabs%20V2.png?raw=true)
+![it-pedrops](/aws/infrastructure/vpc-itlabs%20V2.png?raw=true)
 
 ### Pré-requisitos
       1. Ansible instalado 
