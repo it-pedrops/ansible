@@ -1,0 +1,13 @@
+- elasticache:
+    name: "cache-auth-pedrops"
+    state: present
+    engine: memcached
+    cache_engine_version: 1.4.34
+    node_type: cache.m3.medium
+    num_nodes: 1
+    cache_port: 11211
+    cache_subnet_group: "{{ mysubnet }}"
+    security_group_ids:
+      - my-nsg     
+    zone: sa-east-1a
+
