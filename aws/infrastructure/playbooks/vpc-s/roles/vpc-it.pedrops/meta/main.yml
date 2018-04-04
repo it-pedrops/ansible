@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Pedro Henrique "PedrOps.it"
+  description: A role executa a Criação de recursos de rede na AWS
+  company: Enterprise DevOps
+# 
+  license: license (GPLv2, CC-BY, etc)
+
+  min_ansible_version: 1.1
+  
+  platforms:
+  - name: DevOps 
+
+ # galaxy_tags:
+ #   - vpc
+ #   - ec2
+ #   - cloud
+ #   - jenkins
+    
+dependencies: []
+
