@@ -1,0 +1,26 @@
+---
+
+  # Região que será criada a VPC
+  aws_region:     "sa-east-1"
+  # Informações da VPC "Nome e range de network"
+  vpc_name:       "itlab-prd"
+  vpc_cidr_block: "172.27.40.0/21"
+  
+  # Subnets
+  public_subnet_1_cidr:  "172.27.42.0/23"
+  
+  ############################
+  # Used in parts 2 and 3    #
+  ############################
+  
+  # Subnets
+  private_subnet_1_cidr: "172.27.44.0/23"
+  
+  ############################
+  # Used in part 3 only      #
+  ############################
+  
+  # Subnets
+  public_subnet_2_cidr:  "172.27.46.0/23"
+  private_subnet_2_cidr: "172.27.48.0/23"
+  
