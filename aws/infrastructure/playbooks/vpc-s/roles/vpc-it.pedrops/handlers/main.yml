@@ -1,0 +1,4 @@
+---
+# example HANDLER
+#- name: restart apache
+#      service: name=httpd state=restarted
