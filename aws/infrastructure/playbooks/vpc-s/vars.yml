@@ -1,0 +1,25 @@
+---
+
+# Região que será criada a VPC
+#aws_region:     "sa-east-1"
+# Informações da VPC "Nome e range de network"
+#vpc_name:       "itdlab-dev"
+#vpc_cidr_block: "172.27.16.0/21"
+
+# Subnets
+#public_subnet_1_cidr:  "172.27.16.0/23"
+
+############################
+# Used in parts 2 and 3    #
+############################
+
+# Subnets
+#private_subnet_1_cidr: "172.27.18.0/23"
+
+############################
+# Used in part 3 only      #
+############################
+
+# Subnets
+#public_subnet_2_cidr:  "172.27.20.0/23"
+#private_subnet_2_cidr: "172.27.22.0/23"
