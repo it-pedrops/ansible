@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+ServerName {{ SERVER_NAME }}
+ServerAlias {{ SERVER_ALIAS }}
+DocumentRoot {{ DOCUMENT_ROOT }}
+ErrorLog {{ ERROR_LOG }}
+CustomLog {{ CUSTOM_LOG }}
+ScriptAlias {{ SCRIPT_ALIAS }}
+<Directory {{ DIRECTORY }}>
+    AllowOverride All
+    Require all granted
+    Options FollowSymLinks
+</Directory>
+</VirtualHost>
