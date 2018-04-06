@@ -1,8 +1,8 @@
 ---
 
-  # Região que será criada a VPC
+  # Set region
   aws_region:     "sa-east-1"
-  # Informações da VPC "Nome e range de network"
+  # Informations vpcs "name and range network"
   vpc_name:       "itlab-prd"
   vpc_cidr_block: "172.27.40.0/21"
   
