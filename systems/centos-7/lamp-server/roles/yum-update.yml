@@ -1,4 +1,0 @@
----
-   - name: "Atualizando pacotes do sistema..."
-     yum: name=* state=latest
-     tags: yumupdate
