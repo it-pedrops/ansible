@@ -1,0 +1,28 @@
+---
+   - name: "Criando usuário para hospedatem..."
+     user: name="{{ NAME }}" shell=/bin/bash append=yes 
+     tags: createuser
+
+   - name: "Criando diretórios para hospedagem..."
+     file: path={{ PATH }} state=directory mode=0755 owner={{ OWNER }} group={{ GROUP }} recurse=yes
+     tags: create_directory
+
+   - name: "Criando diretórios de log para hospedagem..."
+     file: path={{ DIRECTORY_LOGS }} state=directory mode=0755 owner={{ OWNER }} group={{ GROUP }} recurse=yes
+     tags: create_log_directory
+
+   - name: "Criando diretórios de CGI-BIN para hospedagem..."
+     file: path={{ DIRECTORY_CGI }} state=directory mode=0755 owner={{ OWNER }} group={{ GROUP }} recurse=yes
+     tags: create_cgi-bin_directory
+
+   - name: "Instalando Apache..."
+     yum: pkg=httpd state=latest
+     tags: Apache
+   
+   - name: "Adicionando arquivo de configuração do Apache..."
+     template: src=httpd.conf.j2 dest=/etc/httpd/conf.d/phcloud.conf
+     tags: apachefileconfig
+
+   - name: "Iniciando Apache..."
+     service: name=httpd state=restarted
+     tags: apachestart
