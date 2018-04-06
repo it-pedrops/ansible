@@ -1,0 +1,11 @@
+---
+  - hosts: lampserver
+    user: administrator
+    become: True
+    become_method: sudo
+    roles:
+        - basics
+        - yum
+        - php
+        - httpd
+        - mariadb
