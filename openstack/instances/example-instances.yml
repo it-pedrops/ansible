@@ -1,0 +1,18 @@
+##### instancia with flavor micro.1GB - Centos 7 ###
+- name: launch a compute instance
+  hosts: openstack
+  tasks:
+    - name: launch an instance
+      os_server:
+        state: present
+        auth:
+          auth_url: https://keystone.PORTA/v2.0
+          username: name-user
+          password: pass-user
+          project_name: name-project
+        name: ansible-deploy1
+        image: image-id
+        key_name: key-name
+        timeout: 200
+        flavor: micro.1GB
+        network: vnet-name
