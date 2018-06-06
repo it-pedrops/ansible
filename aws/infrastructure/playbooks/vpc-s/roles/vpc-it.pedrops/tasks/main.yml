@@ -24,16 +24,16 @@
 # Sendo uma public, e outra privada private.
 # Duas subnets na mesma AZ.
 # Novamente, aqui temos as variaveis setada no arquivo @var.yml
-  
+  ## AZ 1
   - name:               Create Public Subnet [AZ-1]
     ec2_vpc_subnet:
       state:            "present"
       vpc_id:           "{{ vpc_id }}"
-      cidr:             "172.27.40.0/23"
+      cidr:             "172.23.0.0/20"
       az:               "{{ aws_region }}a"
       region:           "{{ aws_region }}"
       resource_tags:    
-        Name:           "Public-prd-Subnet-1A"
+        Name:           "subnet-public-1a"
     register: my_public_subnet_az1
   
   - name:               Set Public Subnet ID in variable [AZ-1]
@@ -44,26 +44,27 @@
     ec2_vpc_subnet:
       state:            "present"
       vpc_id:           "{{ vpc_id }}"
-      cidr:             "172.27.42.0/23"
+      cidr:             "172.23.64.0/20"
       az:               "{{ aws_region }}a"
       region:           "{{ aws_region }}"
       resource_tags:
-        Name:           "Private-prd-Subnet-1A"
+        Name:           "subnet-private-1a"
     register: my_private_subnet_az1
   
   - name:               Set Private Subnet ID in variable [AZ-1]
     set_fact:
       private_subnet_az1_id: "{{ my_private_subnet_az1.subnet.id }}"
   
+  ## AZ 2
   - name:               Create Public Subnet [AZ-2]
     ec2_vpc_subnet:
       state:            "present"
       vpc_id:           "{{ vpc_id }}"
-      cidr:             "172.27.44.0/23"
+      cidr:             "172.23.16.0/20"
       az:               "{{ aws_region }}c"
       region:           "{{ aws_region }}"
       resource_tags:
-        Name:           "Public-prd-Subnet-2C"
+        Name:           "subnet-public-2b"
     register: my_public_subnet_az2
   
   - name:               Set Public Subnet ID in variable [AZ-2]
@@ -74,18 +75,79 @@
     ec2_vpc_subnet:
       state:            "present"
       vpc_id:           "{{ vpc_id }}"
-      cidr:             "172.27.46.0/23"
+      cidr:             "172.23.80.0/20"
       az:               "{{ aws_region }}c"
       region:           "{{ aws_region }}"
       resource_tags:
-        Name:           "Private-prd-Subnet-2C"
+        Name:           "subnet-private-2b"
     register: my_private_subnet_az2
   
   - name:               Set Private Subnet ID in variable [AZ-2]
     set_fact:
       private_subnet_az2_id: "{{ my_private_subnet_az2.subnet.id }}"
+
+## AZ 3
+  - name:               Create Public Subnet [AZ-3]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.23.32.0/20"
+      az:               "{{ aws_region }}c"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-public-3c"
+    register: my_public_subnet_az2
   
+  - name:               Set Public Subnet ID in variable [AZ-2]
+    set_fact:
+      public_subnet_az2_id: "{{ my_public_subnet_az2.subnet.id }}"
   
+  - name:               Create Private Subnet [AZ-3]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.23.96.0/20"
+      az:               "{{ aws_region }}e"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-private-1e"
+    register: my_private_subnet_az2
+  
+  - name:               Set Private Subnet ID in variable [AZ-2]
+    set_fact:
+      private_subnet_az2_id: "{{ my_private_subnet_az2.subnet.id }}"
+
+## AZ 4
+  - name:               Create Public Subnet [AZ-4]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.23.48.0/20"
+      az:               "{{ aws_region }}d"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-public-4d"
+    register: my_public_subnet_az2
+  
+  - name:               Set Public Subnet ID in variable [AZ-4]
+    set_fact:
+      public_subnet_az2_id: "{{ my_public_subnet_az2.subnet.id }}"
+  
+  - name:               Create Private Subnet [AZ-4]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.23.112.0/20"
+      az:               "{{ aws_region }}F"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-private-1f"
+    register: my_private_subnet_az2
+  
+  - name:               Set Private Subnet ID in variable [AZ-4]
+    set_fact:
+      private_subnet_az2_id: "{{ my_private_subnet_az2.subnet.id }}"
+
 # Sempre quando criar um vpc vc irá precisar de um Internet Gateway.
 # O IGW na aws é responsável por encaminhar o trafégo para internet ou 0.0.0.0/ como preferir.
   
