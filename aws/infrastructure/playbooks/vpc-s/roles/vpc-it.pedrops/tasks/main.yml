@@ -61,7 +61,7 @@
       state:            "present"
       vpc_id:           "{{ vpc_id }}"
       cidr:             "172.23.16.0/20"
-      az:               "{{ aws_region }}c"
+      az:               "{{ aws_region }}b"
       region:           "{{ aws_region }}"
       resource_tags:
         Name:           "subnet-public-2b"
@@ -76,7 +76,7 @@
       state:            "present"
       vpc_id:           "{{ vpc_id }}"
       cidr:             "172.23.80.0/20"
-      az:               "{{ aws_region }}c"
+      az:               "{{ aws_region }}b"
       region:           "{{ aws_region }}"
       resource_tags:
         Name:           "subnet-private-2b"
@@ -98,11 +98,11 @@
         Name:           "subnet-public-3c"
     register: my_public_subnet_az2
   
-  - name:               Set Public Subnet ID in variable [AZ-2]
+  - name:               Set Public Subnet ID in variable [AZ-3]
     set_fact:
-      public_subnet_az2_id: "{{ my_public_subnet_az2.subnet.id }}"
+      public_subnet_az3_id: "{{ my_public_subnet_az3.subnet.id }}"
   
-  - name:               Create Private Subnet [AZ-3]
+  - name:               Create Private Subnet [AZ-5]
     ec2_vpc_subnet:
       state:            "present"
       vpc_id:           "{{ vpc_id }}"
@@ -111,11 +111,11 @@
       region:           "{{ aws_region }}"
       resource_tags:
         Name:           "subnet-private-1e"
-    register: my_private_subnet_az2
+    register: my_private_subnet_az5
   
-  - name:               Set Private Subnet ID in variable [AZ-2]
+  - name:               Set Private Subnet ID in variable [AZ-3]
     set_fact:
-      private_subnet_az2_id: "{{ my_private_subnet_az2.subnet.id }}"
+      private_subnet_az5_id: "{{ my_private_subnet_az5.subnet.id }}"
 
 ## AZ 4
   - name:               Create Public Subnet [AZ-4]
@@ -127,26 +127,26 @@
       region:           "{{ aws_region }}"
       resource_tags:
         Name:           "subnet-public-4d"
-    register: my_public_subnet_az2
+    register: my_public_subnet_az4
   
   - name:               Set Public Subnet ID in variable [AZ-4]
     set_fact:
-      public_subnet_az2_id: "{{ my_public_subnet_az2.subnet.id }}"
+      public_subnet_az4_id: "{{ my_public_subnet_az4.subnet.id }}"
   
-  - name:               Create Private Subnet [AZ-4]
+  - name:               Create Private Subnet [AZ-6]
     ec2_vpc_subnet:
       state:            "present"
       vpc_id:           "{{ vpc_id }}"
       cidr:             "172.23.112.0/20"
-      az:               "{{ aws_region }}F"
+      az:               "{{ aws_region }}f"
       region:           "{{ aws_region }}"
       resource_tags:
         Name:           "subnet-private-1f"
     register: my_private_subnet_az2
   
-  - name:               Set Private Subnet ID in variable [AZ-4]
+  - name:               Set Private Subnet ID in variable [AZ-6]
     set_fact:
-      private_subnet_az2_id: "{{ my_private_subnet_az2.subnet.id }}"
+      private_subnet_az6_id: "{{ my_private_subnet_az6.subnet.id }}"
 
 # Sempre quando criar um vpc vc irá precisar de um Internet Gateway.
 # O IGW na aws é responsável por encaminhar o trafégo para internet ou 0.0.0.0/ como preferir.
@@ -181,14 +181,14 @@
     set_fact:
       my_eip_az1: "{{ eip_az1.stdout }}"
   
-  - name: Create Elastic IP [AZ-2]
-    shell: >
-        aws ec2 allocate-address --domain vpc --query AllocationId | tr -d '"'
-    register: eip_az2
+#  - name: Create Elastic IP [AZ-2]
+#    shell: >
+#        aws ec2 allocate-address --domain vpc --query AllocationId | tr -d '"'
+#    register: eip_az2
   
-  - name: Set EIP in variable [AZ-2]
-    set_fact:
-      my_eip_az2: "{{ eip_az2.stdout }}"
+#  - name: Set EIP in variable [AZ-2]
+#    set_fact:
+#      my_eip_az2: "{{ eip_az2.stdout }}"
   
   
 # Aqui vamos criar um NAT Gateway.
@@ -208,17 +208,17 @@
     set_fact:
       nat_gateway_az1_id: "{{ my_nat_gateway_z1.stdout }}"
   
-  - name: Create NAT Gateway [AZ-2]
-    shell: >
-      aws ec2 create-nat-gateway \
-      --subnet-id {{ public_subnet_az2_id }} \
-      --allocation-id {{ my_eip_az2 }} \
-      --query NatGateway.NatGatewayId | tr -d '"'
-    register: my_nat_gateway_z2
+#  - name: Create NAT Gateway [AZ-2]
+#    shell: >
+#      aws ec2 create-nat-gateway \
+#      --subnet-id {{ public_subnet_az2_id }} \
+#      --allocation-id {{ my_eip_az2 }} \
+#      --query NatGateway.NatGatewayId | tr -d '"'
+#    register: my_nat_gateway_z2
   
-  - name: Set Nat Gateway ID in variable [AZ-2]
-    set_fact:
-      nat_gateway_az2_id: "{{ my_nat_gateway_z2.stdout }}"
+#  - name: Set Nat Gateway ID in variable [AZ-2]
+#    set_fact:
+#      nat_gateway_az2_id: "{{ my_nat_gateway_z2.stdout }}"
   
   
 # Aqui vamos usar um pause para esperar a criação do NAT
@@ -241,6 +241,8 @@
       subnets:
         - "{{ public_subnet_az1_id }}"
         - "{{ public_subnet_az2_id }}"
+        - "{{ public_subnet_az3_id }}"
+        - "{{ public_subnet_az4_id }}"
       routes:
         - dest: "0.0.0.0/0"
           gateway_id: "{{ igw_id }}"
@@ -253,18 +255,9 @@
         Name: "Private 1"
       subnets:
         - "{{ private_subnet_az1_id }}"
+        - "{{ private_subnet_az1_id }}"
+        - "{{ private_subnet_az5_id }}"
+        - "{{ private_subnet_az6_id }}"
       routes:
         - dest: "0.0.0.0/0"
           gateway_id: "{{ nat_gateway_az1_id }}"
-  
-  - name: Set up private subnet route table [AZ-2]
-    ec2_vpc_route_table:
-      vpc_id: "{{ vpc_id }}"
-      region: "{{ aws_region }}"
-      tags:
-        Name: "Private 2"
-      subnets:
-        - "{{ private_subnet_az2_id }}"
-      routes:
-        - dest: "0.0.0.0/0"
-          gateway_id: "{{ nat_gateway_az2_id }}"
