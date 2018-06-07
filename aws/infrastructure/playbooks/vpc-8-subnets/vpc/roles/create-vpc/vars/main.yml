@@ -1,0 +1,31 @@
+---
+##variaveis
+  # Set region
+  aws_region:     "us-east-1"
+  # Informations vpcs "name and range network"
+  vpc_name:       "vpc-large"
+  vpc_cidr_block: "172.22.0.0/16"
+  
+  # Subnets
+  public_subnet_1_cidr:  "172.22.0.0/20"
+  
+  ############################
+  # Used in parts 2 and 3    #
+  ############################
+  
+  # Subnets
+  private_subnet_1_cidr: "172.22.64.0/20"
+  
+  ############################
+  # Used in part 3 only      #
+  ############################
+  
+  # Subnets
+  public_subnet_2_cidr:  "172.22.16.0/20"
+  private_subnet_2_cidr: "172.22.80.0/20"
+  # Subnets
+  public_subnet_3_cidr: "172.22.32.0/20"
+  private_subnet_5_cidr: "172.22.96.0/20"
+  # Subnets
+  public_subnet_4_cidr: "172.22.48.0/20"
+  private_subnet_6_cidr: "172.22.112.0/20"
