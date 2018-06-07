@@ -1,0 +1,263 @@
+---
+
+# roles/vpc/tasks/main.yml
+
+# Primeira tarefa : Criar uma VPC.
+# Usando as váriaveis no arquivo vars.yml .
+# Aqui teremos todas as informações da VPC que será Criada. 
+# Registrando a VPC na variavel: my_vpc.
+  
+  - name:               Create VPC
+    ec2_vpc_net:
+      name:             "{{ vpc_name }}"
+      cidr_block:       "{{ vpc_cidr_block }}"
+      region:           "{{ aws_region }}"
+      state:            "present"
+    register: my_vpc
+  
+  - name:               Set VPC ID in variable
+    set_fact:
+      vpc_id:           "{{ my_vpc.vpc.id }}"
+  
+  
+# Agora vamos criar as subnets.
+# Sendo uma public, e outra privada private.
+# Duas subnets na mesma AZ.
+# Novamente, aqui temos as variaveis setada no arquivo @var.yml
+  ## AZ 1
+  - name:               Create Public Subnet [AZ-1]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.22.0.0/20"
+      az:               "{{ aws_region }}a"
+      region:           "{{ aws_region }}"
+      resource_tags:    
+        Name:           "subnet-public-1a"
+    register: my_public_subnet_az1
+  
+  - name:               Set Public Subnet ID in variable [AZ-1]
+    set_fact:
+      public_subnet_az1_id: "{{ my_public_subnet_az1.subnet.id }}"
+  
+  - name:               Create Private Subnet [AZ-1]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.22.64.0/20"
+      az:               "{{ aws_region }}a"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-private-1a"
+    register: my_private_subnet_az1
+  
+  - name:               Set Private Subnet ID in variable [AZ-1]
+    set_fact:
+      private_subnet_az1_id: "{{ my_private_subnet_az1.subnet.id }}"
+  
+  ## AZ 2
+  - name:               Create Public Subnet [AZ-2]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.22.16.0/20"
+      az:               "{{ aws_region }}b"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-public-2b"
+    register: my_public_subnet_az2
+  
+  - name:               Set Public Subnet ID in variable [AZ-2]
+    set_fact:
+      public_subnet_az2_id: "{{ my_public_subnet_az2.subnet.id }}"
+  
+  - name:               Create Private Subnet [AZ-2]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.22.80.0/20"
+      az:               "{{ aws_region }}b"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-private-2b"
+    register: my_private_subnet_az2
+  
+  - name:               Set Private Subnet ID in variable [AZ-2]
+    set_fact:
+      private_subnet_az2_id: "{{ my_private_subnet_az2.subnet.id }}"
+
+## AZ 3
+  - name:               Create Public Subnet [AZ-3]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.22.32.0/20"
+      az:               "{{ aws_region }}c"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-public-3c"
+    register: my_public_subnet_az3
+  
+  - name:               Set Public Subnet ID in variable [AZ-3]
+    set_fact:
+      public_subnet_az3_id: "{{ my_public_subnet_az3.subnet.id }}"
+  
+  - name:               Create Private Subnet [AZ-5]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.22.96.0/20"
+      az:               "{{ aws_region }}e"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-private-1e"
+    register: my_private_subnet_az5
+  
+  - name:               Set Private Subnet ID in variable [AZ-3]
+    set_fact:
+      private_subnet_az5_id: "{{ my_private_subnet_az5.subnet.id }}"
+
+## AZ 4
+  - name:               Create Public Subnet [AZ-4]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.22.48.0/20"
+      az:               "{{ aws_region }}d"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-public-4d"
+    register: my_public_subnet_az4
+  
+  - name:               Set Public Subnet ID in variable [AZ-4]
+    set_fact:
+      public_subnet_az4_id: "{{ my_public_subnet_az4.subnet.id }}"
+  
+  - name:               Create Private Subnet [AZ-6]
+    ec2_vpc_subnet:
+      state:            "present"
+      vpc_id:           "{{ vpc_id }}"
+      cidr:             "172.22.112.0/20"
+      az:               "{{ aws_region }}f"
+      region:           "{{ aws_region }}"
+      resource_tags:
+        Name:           "subnet-private-1f"
+    register: my_private_subnet_az6
+  
+  - name:               Set Private Subnet ID in variable [AZ-6]
+    set_fact:
+      private_subnet_az6_id: "{{ my_private_subnet_az6.subnet.id }}"
+
+# Sempre quando criar um vpc vc irá precisar de um Internet Gateway.
+# O IGW na aws é responsável por encaminhar o trafégo para internet ou 0.0.0.0/ como preferir.
+  
+  - name:               Create Internet Gateway for VPC
+    ec2_vpc_igw:
+      vpc_id:           "{{ vpc_id }}"
+      region:           "{{ aws_region }}"
+      state:            "present"
+    register: my_vpc_igw
+  
+  - name:               Set Internet Gateway ID in variable
+    set_fact:
+      igw_id:           "{{ my_vpc_igw.gateway_id }}"
+  
+  
+  # Now we create two AWS Elastic IPs.
+  # We will attach them to the two NAT Gateways.
+  # That basically means that each AZ will have its own gateway,
+  # and therefore your VPC will have 2 external IP addresses.
+  
+  - name: Setup AWS CLI (3/3)
+    shell: >
+      aws configure set region {{ aws_region }}
+  
+  - name: Create Elastic IP [AZ-1]
+    shell: >
+        aws ec2 allocate-address --domain vpc --query AllocationId | tr -d '"'
+    register: eip_az1
+  
+  - name: Set EIP in variable [AZ-1]
+    set_fact:
+      my_eip_az1: "{{ eip_az1.stdout }}"
+  
+#  - name: Create Elastic IP [AZ-2]
+#    shell: >
+#        aws ec2 allocate-address --domain vpc --query AllocationId | tr -d '"'
+#    register: eip_az2
+  
+#  - name: Set EIP in variable [AZ-2]
+#    set_fact:
+#      my_eip_az2: "{{ eip_az2.stdout }}"
+  
+  
+# Aqui vamos criar um NAT Gateway.
+# Aqui vamos, atacchar NAT Gateway na subnet public
+# O mesmo é responsável para que as instancias na rede interna saia para internet
+
+  
+  - name: Create NAT Gateway [AZ-1]
+    shell: >
+      aws ec2 create-nat-gateway \
+      --subnet-id {{ public_subnet_az1_id }} \
+      --allocation-id {{ my_eip_az1 }} \
+      --query NatGateway.NatGatewayId | tr -d '"'
+    register: my_nat_gateway_z1
+  
+  - name: Set Nat Gateway ID in variable [AZ-1]
+    set_fact:
+      nat_gateway_az1_id: "{{ my_nat_gateway_z1.stdout }}"
+  
+#  - name: Create NAT Gateway [AZ-2]
+#    shell: >
+#      aws ec2 create-nat-gateway \
+#      --subnet-id {{ public_subnet_az2_id }} \
+#      --allocation-id {{ my_eip_az2 }} \
+#      --query NatGateway.NatGatewayId | tr -d '"'
+#    register: my_nat_gateway_z2
+  
+#  - name: Set Nat Gateway ID in variable [AZ-2]
+#    set_fact:
+#      nat_gateway_az2_id: "{{ my_nat_gateway_z2.stdout }}"
+  
+  
+# Aqui vamos usar um pause para esperar a criação do NAT
+  
+  - pause: seconds=5
+  
+  
+ # Estaremos configurando as rotas da VPC
+# voce precisa de ao menos uma rota na subnet plubic,
+# E outra na subnet private.
+# na private subnet voce direciona o detisno para o NAT Gateway
+# E na subnet plubic direciona para IGW
+  
+  - name: Set up public subnet route table
+    ec2_vpc_route_table:
+      vpc_id: "{{ vpc_id }}"
+      region: "{{ aws_region }}"
+      tags:
+        Name: "Public"
+      subnets:
+        - "{{ public_subnet_az1_id }}"
+        - "{{ public_subnet_az2_id }}"
+        - "{{ public_subnet_az3_id }}"
+        - "{{ public_subnet_az4_id }}"
+      routes:
+        - dest: "0.0.0.0/0"
+          gateway_id: "{{ igw_id }}"
+  
+  - name: Set up private subnet route table [AZ-1]
+    ec2_vpc_route_table:
+      vpc_id: "{{ vpc_id }}"
+      region: "{{ aws_region }}"
+      tags:
+        Name: "Private 1"
+      subnets:
+        - "{{ private_subnet_az1_id }}"
+        - "{{ private_subnet_az2_id }}"
+        - "{{ private_subnet_az5_id }}"
+        - "{{ private_subnet_az6_id }}"
+      routes:
+        - dest: "0.0.0.0/0"
+          gateway_id: "{{ nat_gateway_az1_id }}"
