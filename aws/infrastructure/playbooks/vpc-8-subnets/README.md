@@ -1,3 +1,3 @@
 ##VPC LARGE
 
-![it-pedrops](/aws/infrastructure/vpc-large.png?raw=true)
+![it-pedrops](/aws/infrastructure/vpc-large.png?radasdasdasw=true)
